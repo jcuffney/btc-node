@@ -1,0 +1,42 @@
+#! /bin/bash
+
+# shared vars
+NAME=btc-node
+REGION=nyc1
+
+DROPLET_ID=$(
+    doctl compute droplet list --output json | jq -r ".[]|select(.name==\"${NAME}\")|.id"
+)
+echo "droplet (id: $DROPLET_ID)"
+VOLUME_ID=$(
+    doctl compute volume list --output json | jq -r ".[]|select(.name==\"${NAME}-volume\")|.id"
+)
+echo "volume (id: $VOLUME_ID)"
+
+# ############################################
+# Detach Volume from Droplet
+# ############################################
+
+echo "detaching volume from droplet..."
+doctl compute volume-action detach $VOLUME_ID $DROPLET_ID --wait > /dev/null
+echo "detached volume from droplet"
+
+# ############################################
+# Delete Droplet
+# ############################################
+
+echo "deleting droplet..."
+doctl compute droplet delete $NAME --force
+echo "droplet deleted"
+
+# ############################################
+# Delete Volume
+# ############################################
+
+echo "deleting volume..."
+doctl compute volume delete $VOLUME_ID --force
+echo "droplet volume"
+
+# ############################################
+
+echo "Done!"

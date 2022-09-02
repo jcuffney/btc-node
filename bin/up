@@ -1,0 +1,62 @@
+#! /bin/bash
+
+# shared vars
+NAME=btc-node
+REGION=nyc1
+
+# ############################################
+# Volume
+# ############################################
+
+# volume vars
+SIZE="512GiB"
+FILE_SYSTEM_TYPE="ext4"
+
+# create a volume to store the data on
+echo "creating volume..."
+VOLUME_ID=$(
+    doctl compute volume create "$NAME-volume" \
+        --fs-type $FILE_SYSTEM_TYPE \
+        --region $REGION \
+        --size $SIZE \
+        --tag $NAME \
+        --format ID \
+        --no-header
+)
+echo "created volume (id: $VOLUME_ID)"
+
+# ############################################
+# Droplet
+# ############################################
+
+# droplet vars
+IMAGE=ubuntu-22-04-x64
+SIZE=s-1vcpu-1gb
+
+# create a droplet to deploy the node onto 
+echo "creating droplet..."
+DROPLET_ID=$(
+    doctl compute droplet create $NAME \
+        --image $IMAGE \
+        --region $REGION \
+        --size $SIZE \
+        --tag-names $NAME \
+        --enable-monitoring \
+        --wait \
+        --user-data-file ./config/user-data.yml \
+        --format ID \
+        --no-header
+)
+echo "created droplet (id: $DROPLET_ID)"
+
+# ############################################
+# Attach Volume to Droplet
+# ############################################
+
+echo "attaching volume to droplet... (droplet_id: $DROPLET_ID, volume_id: $VOLUME_ID)"
+doctl compute volume-action attach $VOLUME_ID $DROPLET_ID --wait > /dev/null
+echo "attached volume to droplet"
+
+# ############################################
+
+echo "Done!"

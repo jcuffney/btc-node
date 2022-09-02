@@ -1,0 +1,22 @@
+[Unit]
+Description=Bitcoin's distributed currency daemon
+After=network.target
+
+[Service]
+User=bitcoin
+Group=bitcoin
+
+Type=forking
+PIDFile=/mnt/volume-lon1-03-part1/Bitcoin/bitcoind.pid
+ExecStart=/usr/bin/bitcoind -daemon -pid=/mnt/volume-lon1-03-part1/Bitcoin/bitcoind.pid \
+-conf=/home/bitcoin/.bitcoin/bitcoin.conf -datadir=/mnt/volume-lon1-03-part1/Bitcoin
+
+Restart=always
+PrivateTmp=true
+TimeoutStopSec=60s
+TimeoutStartSec=2s
+StartLimitInterval=120s
+StartLimitBurst=5
+
+[Install]
+WantedBy=multi-user.target

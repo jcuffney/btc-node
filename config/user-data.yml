@@ -1,0 +1,16 @@
+#cloud-config
+
+users:
+  - name: jcuffney
+    groups: sudo
+    shell: /bin/bash
+    sudo: ["ALL=(ALL) NOPASSWD:ALL"]
+    ssh-authorized-keys:
+      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCs0qO1CP6WreDSwPrCk2thPlAnbpCdvKyJJ4O6TseVRm+ItdKjmE73VpVW+5ec0lANmgUHqq1YkvlNwbXT8lV+Ho5S5DCvbP4s/3jMSsNNqqSOVDOYKaTNFakGC0Z+vbIyEodmeWDOgZDyiDrIa8OVBc+jXdLp6jyyw9YB6uswCPpFJP2CcXJcqdrcMCtN8Ycg5NkScRJPM3ejc+Gm+h5/kD1UzxDDDws7BIn1w3v4ZNgiK0XHM1k4K+F9/456bsciOYlZ10CYJj1eDZFdbivQ8jNi9EJka+YTE7TsyRo0+eDAIWOrl31px84RTId9avmkKqv1G7/n6QRPbEtWzelkPYaUZru2Z4FkwNbjuoU+29fEWkz6oZZHsAaht0abaFS9exCBwQQ9IvuwJPc8SCK4o+B+dU3BgdRtUSX4fxevALfBFrshRpmAWrkB3sXJcCM/wFwQnfRU5/nbgBZeeIoEzxX1D52pS/pwFJ4/nrtq1gcnlD7MjjySVr2LURRpBR0=
+
+packages:
+  - git
+
+runcmd:
+  # set jcuffney as owner of /home/jcuffney
+  - sudo chown -R jcuffney:jcuffney /home/jcuffney
