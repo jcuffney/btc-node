@@ -11,6 +11,13 @@ users:
 packages:
   - git
 
+write_files:
+  - path: /home/jcuffney/.bitcoin/bitcoin.conf
+    owner: jcuffney:jcuffney
+    permissions: "0644"
+    content: |
+      WIP
+
 runcmd:
   # set jcuffney as owner of /home/jcuffney
   - sudo chown -R jcuffney:jcuffney /home/jcuffney
